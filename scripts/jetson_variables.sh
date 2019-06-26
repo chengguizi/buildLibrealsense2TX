@@ -68,7 +68,7 @@ if [ -f /etc/nv_tegra_release ]; then
         case $JETSON_L4T in
             "28.2.1")
                     JETSON_JETPACK="3.2.1" ;;
-            "28.2") 
+            "28.2.0") 
                JETSON_JETPACK="3.2" ;;
             *)
                JETSON_JETPACK="UNKNOWN" ;;
@@ -77,7 +77,7 @@ if [ -f /etc/nv_tegra_release ]; then
         case $JETSON_L4T in
             "28.2.1")
                     JETSON_JETPACK="3.2.1" ;;
-            "28.2") 
+            "28.2.0") 
                     JETSON_JETPACK="3.2" ;;
             "28.1") 
                     JETSON_JETPACK="3.1" ;;

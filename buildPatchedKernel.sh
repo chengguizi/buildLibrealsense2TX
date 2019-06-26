@@ -4,10 +4,10 @@
 # MIT License
 
 
-CLEANUP=true
+CLEANUP=false
 
 LIBREALSENSE_DIRECTORY=${HOME}/librealsense
-LIBREALSENSE_VERSION=v2.13.0
+LIBREALSENSE_VERSION=v2.23.0
 
 
 function usage
@@ -50,11 +50,11 @@ set -e
 # The KERNEL_BUILD_VERSION is the release tag for the JetsonHacks buildKernel repository
 KERNEL_BUILD_VERSION=master
 if [ $JETSON_BOARD == "TX2" ] ; then 
-L4TTarget="28.2.1"
+L4TTarget="28.2.0"
   # Test for 28.2.1 first
   if [ $JETSON_L4T = "28.2.1" ] ; then
      KERNEL_BUILD_VERSION=vL4T28.2.1
-  elif [ $JETSON_L4T = "28.2" ] ; then
+  elif [ $JETSON_L4T = "28.2.0" ] ; then
      KERNEL_BUILD_VERSION=vL4T28.2r3
   else
    echo ""
@@ -147,7 +147,7 @@ KERNEL_BUILD_DIR=""
 cd $INSTALL_DIR
 echo "Ready to patch and build kernel "$JETSON_BOARD
 if [ $JETSON_BOARD == "TX2" ] ; then 
-  git clone https://github.com/jetsonhacks/buildJetsonTX2Kernel.git
+  [ ! -d "buildJetsonTX2Kernel" ] && git clone https://github.com/jetsonhacks/buildJetsonTX2Kernel.git
   KERNEL_BUILD_DIR=buildJetsonTX2Kernel
   cd $KERNEL_BUILD_DIR
   git checkout $KERNEL_BUILD_VERSION
@@ -166,10 +166,11 @@ fi
 
 # Get the kernel sources; does not open up editor on .config file
 echo "${green}Getting Kernel sources${reset}"
-./getKernelSourcesNoGUI.sh
+rm -rf /usr/src/kernel/kernel4.4/
+./getKernelSources.sh
 cd ..
 echo "${green}Patching and configuring kernel${reset}"
-sudo ./scripts/configureKernel.sh
+# sudo ./scripts/configureKernel.sh
 sudo ./scripts/patchKernel.sh
 
 cd $KERNEL_BUILD_DIR

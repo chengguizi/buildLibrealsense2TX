@@ -7,11 +7,11 @@
 # In this script, we build 3.11 but do not install it
 
 LIBREALSENSE_DIRECTORY=${HOME}/librealsense
-LIBREALSENSE_VERSION=v2.13.0
+LIBREALSENSE_VERSION=v2.23.0
 INSTALL_DIR=$PWD
 
 
-BUILD_CMAKE=true
+BUILD_CMAKE=false
 
 function usage
 {
@@ -72,7 +72,7 @@ if [ ! $VERSION_TAG  ] ; then
 fi
 
 # Checkout version the last tested version of librealsense
-git checkout $LIBREALSENSE_VERSION
+git checkout -f $LIBREALSENSE_VERSION
 
 # Install the dependencies
 cd $INSTALL_DIR
@@ -90,15 +90,15 @@ if [ "$BUILD_CMAKE" = true ] ; then
 fi
 
 cd $LIBREALSENSE_DIRECTORY
-git checkout $LIBREALSENSE_VERSION
+git checkout -f $LIBREALSENSE_VERSION
 
 echo "${green}Applying Model-Views Patch${reset}"
 # The render loop of the post processing does not yield; add a sleep
 patch -p1 -i $INSTALL_DIR/patches/model-views.patch
 
-echo "${green}Applying Incomplete Frames Patch${reset}"
-# The Jetson tends to return incomplete frames at high frame rates; suppress error logging
-patch -p1 -i $INSTALL_DIR/patches/incomplete-frame.patch
+# echo "${green}Applying Incomplete Frames Patch${reset}"
+# # The Jetson tends to return incomplete frames at high frame rates; suppress error logging
+# patch -p1 -i $INSTALL_DIR/patches/incomplete-frame.patch
 
 
 echo "${green}Applying udev rules${reset}"
@@ -113,7 +113,7 @@ cd build
 echo "${green}Configuring Make system${reset}"
 # Use the CMake version that we built, must be > 3.8
 # Build with CUDA (default), the CUDA flag is USE_CUDA, ie -DUSE_CUDA=true
-${HOME}/CMake/bin/cmake ../ -DBUILD_EXAMPLES=true -DBUILD_WITH_CUDA=true
+${HOME}/CMake/bin/cmake ../ -DBUILD_EXAMPLES=true -DBUILD_WITH_CUDA=true -DBUILD_WITH_TM2=true
 # The library will be installed in /usr/local/lib, header files in /usr/local/include
 # The demos, tutorials and tests will located in /usr/local/bin.
 echo "${green}Building librealsense, headers, tools and demos${reset}"

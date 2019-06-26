@@ -24,19 +24,22 @@ LOCAL_VERSION=${KERNEL_VERSION#$"4.4.38"}
 # HID_SENSOR_ACCEL_3D - HID Accelerometers 3D (NEW)
 # HID_SENSOR_GYRO_3D - HID Gyroscope 3D (NEW)
 
+#########################
+# USE GRAPHICAL CONFIG INSTEAD !!!
+#########################
 
-bash scripts/config --file .config \
-	--set-str LOCALVERSION $LOCAL_VERSION \
-	--enable IIO_BUFFER \
-        --module IIO_KFIFO_BUF \
-        --module IIO_TRIGGERED_BUFFER \
-        --enable IIO_TRIGGER \
-        --set-val IIO_CONSUMERS_PER_TRIGGER 2 \
-        --module HID_SENSOR_IIO_COMMON \
-        --module HID_SENSOR_IIO_TRIGGER \
-        --module HID_SENSOR_HUB \
-        --module HID_SENSOR_ACCEL_3D \
-	--module HID_SENSOR_GYRO_3D
+# bash scripts/config --file .config \
+# 	--set-str LOCALVERSION $LOCAL_VERSION \
+# 	--enable IIO_BUFFER \
+#         --module IIO_KFIFO_BUF \
+#         --module IIO_TRIGGERED_BUFFER \
+#         --enable IIO_TRIGGER \
+#         --set-val IIO_CONSUMERS_PER_TRIGGER 2 \
+#         --module HID_SENSOR_IIO_COMMON \
+#         --module HID_SENSOR_IIO_TRIGGER \
+#         --module HID_SENSOR_HUB \
+#         --module HID_SENSOR_ACCEL_3D \
+# 	--module HID_SENSOR_GYRO_3D
 
 yes "" | make olddefconfig
 
