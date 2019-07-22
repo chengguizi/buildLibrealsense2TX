@@ -7,7 +7,7 @@
 CLEANUP=false
 
 LIBREALSENSE_DIRECTORY=${HOME}/librealsense
-LIBREALSENSE_VERSION=v2.23.0
+LIBREALSENSE_VERSION=development #v2.25.0
 
 
 function usage
@@ -115,9 +115,7 @@ if [ ! -d "$LIBREALSENSE_DIRECTORY" ] ; then
          cd ${HOME}
          echo "${green}Cloning librealsense${reset}"
          git clone https://github.com/IntelRealSense/librealsense.git
-         cd librealsense
-         # Checkout version the last tested version of librealsense
-         git checkout $LIBREALSENSE_VERSION
+         
      ;;
      * )
          echo "Kernel patch and build not started"   
@@ -126,22 +124,9 @@ if [ ! -d "$LIBREALSENSE_DIRECTORY" ] ; then
    esac
 fi
 
-# Is the version of librealsense current enough?
-cd $LIBREALSENSE_DIRECTORY
-VERSION_TAG=$(git tag -l $LIBREALSENSE_VERSION)
-if [ ! $VERSION_TAG  ] ; then
-   echo ""
-  tput setaf 1
-  echo "==== librealsense Version Mismatch! ============="
-  tput sgr0
-  echo ""
-  echo "The installed version of librealsense is not current enough for these scripts."
-  echo "This script needs librealsense tag version: "$LIBREALSENSE_VERSION "but it is not available."
-  echo "This script uses patches from librealsense on the kernel source."
-  echo "Please upgrade librealsense before attempting to patch and build the kernel again."
-  echo ""
-  exit 1
-fi
+cd ${LIBREALSENSE_DIRECTORY}
+# Checkout version the last tested version of librealsense
+git checkout -f $LIBREALSENSE_VERSION
 
 KERNEL_BUILD_DIR=""
 cd $INSTALL_DIR
@@ -175,6 +160,7 @@ sudo ./scripts/patchKernel.sh
 
 cd $KERNEL_BUILD_DIR
 # Make the new Image and build the modules
+read -p "Press enter to build Kernel"
 echo "${green}Building Kernel and Modules${reset}"
 ./makeKernel.sh
 # Now copy over the built image

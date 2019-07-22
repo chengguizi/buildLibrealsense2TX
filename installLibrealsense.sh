@@ -7,11 +7,13 @@
 # In this script, we build 3.11 but do not install it
 
 LIBREALSENSE_DIRECTORY=${HOME}/librealsense
-LIBREALSENSE_VERSION=v2.23.0
+LIBREALSENSE_VERSION=development #v2.25.0
 INSTALL_DIR=$PWD
 
 
-BUILD_CMAKE=false
+BUILD_CMAKE=true
+
+set -e
 
 function usage
 {
@@ -46,33 +48,6 @@ echo "Please make sure that no RealSense cameras are currently attached"
 echo ""
 read -n 1 -s -r -p "Press any key to continue"
 echo ""
-
-if [ ! -d "$LIBREALSENSE_DIRECTORY" ] ; then
-  # clone librealsense
-  cd ${HOME}
-  echo "${green}Cloning librealsense${reset}"
-  git clone https://github.com/IntelRealSense/librealsense.git
-fi
-
-# Is the version of librealsense current enough?
-cd $LIBREALSENSE_DIRECTORY
-VERSION_TAG=$(git tag -l $LIBREALSENSE_VERSION)
-if [ ! $VERSION_TAG  ] ; then
-   echo ""
-  tput setaf 1
-  echo "==== librealsense Version Mismatch! ============="
-  tput sgr0
-  echo ""
-  echo "The installed version of librealsense is not current enough for these scripts."
-  echo "This script needs librealsense tag version: "$LIBREALSENSE_VERSION "but it is not available."
-  echo "This script patches librealsense, the patches apply on the expected version."
-  echo "Please upgrade librealsense before attempting to install again."
-  echo ""
-  exit 1
-fi
-
-# Checkout version the last tested version of librealsense
-git checkout -f $LIBREALSENSE_VERSION
 
 # Install the dependencies
 cd $INSTALL_DIR
